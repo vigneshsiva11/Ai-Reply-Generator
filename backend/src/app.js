@@ -11,7 +11,7 @@ function rateLimitMiddleware(req, res, next) {
   const now = Date.now();
   const bucket = requestBuckets.get(key) || {
     count: 0,
-    windowStart: now
+    windowStart: now,
   };
 
   if (now - bucket.windowStart >= RATE_LIMIT_WINDOW_MS) {
@@ -26,7 +26,7 @@ function rateLimitMiddleware(req, res, next) {
     console.warn(`[rate-limit] blocked request from ${key}`);
     return res.status(429).json({
       success: false,
-      error: "Too many requests. Please try again in a minute."
+      error: "Too many requests. Please try again in a minute.",
     });
   }
 
@@ -40,21 +40,25 @@ export function createApp() {
       origin: true,
       methods: ["GET", "POST", "OPTIONS"],
       allowedHeaders: ["Content-Type", "Authorization"],
-      optionsSuccessStatus: 200
-    })
+      credentials: false,
+    }),
   );
-  app.options("*", cors({
-    origin: true,
-    methods: ["GET", "POST", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-    optionsSuccessStatus: 200
-  }));
+
+  // allow chrome-extension + gmail preflight
+  app.options("*", (req, res) => {
+    res.header("Access-Control-Allow-Origin", req.headers.origin || "*");
+    res.header("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
+    res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+    res.header("Access-Control-Allow-Private-Network", "true");
+    res.sendStatus(200);
+  });
+
   app.use(express.json({ limit: "1mb" }));
   app.use(rateLimitMiddleware);
 
   app.get("/health", (req, res) => {
     res.json({
-      ok: true
+      ok: true,
     });
   });
 
@@ -64,7 +68,7 @@ export function createApp() {
     console.error(error);
     res.status(500).json({
       success: false,
-      error: error.message || "Internal server error."
+      error: error.message || "Internal server error.",
     });
   });
 
