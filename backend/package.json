@@ -1,0 +1,17 @@
+{
+  "name": "gmail-ai-reply-backend",
+  "version": "1.0.0",
+  "description": "Backend API for Gmail AI reply generation",
+  "type": "module",
+  "main": "src/server.js",
+  "scripts": {
+    "dev": "node --watch src/server.js",
+    "start": "node src/server.js"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.24.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.2"
+  }
+}

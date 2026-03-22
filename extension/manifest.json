@@ -1,0 +1,27 @@
+{
+  "manifest_version": 3,
+  "name": "Gmail AI Reply Generator",
+  "version": "1.0.0",
+  "description": "Adds an AI reply generator button inside Gmail compose and reply boxes.",
+  "permissions": [
+    "storage"
+  ],
+  "host_permissions": [
+    "https://mail.google.com/*",
+    "http://localhost:4000/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://mail.google.com/*"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "run_at": "document_idle"
+    }
+  ]
+}
