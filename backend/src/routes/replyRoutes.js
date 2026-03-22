@@ -19,6 +19,7 @@ function validatePayload(body) {
 
 router.post("/generate", async (req, res, next) => {
   try {
+    console.log("POST /api/reply/generate");
     const payload = validatePayload(req.body);
 
     if (!payload.emailThreadText.trim()) {

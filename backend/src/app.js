@@ -35,6 +35,19 @@ function rateLimitMiddleware(req, res, next) {
 
 export function createApp() {
   const app = express();
+  app.use(express.json({ limit: "1mb" }));
+
+  app.use((req, res, next) => {
+    const requestOrigin = req.headers.origin;
+    const allowOrigin = requestOrigin || "https://generate-email-ie0i.onrender.com";
+
+    res.header("Access-Control-Allow-Origin", allowOrigin);
+    res.header("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
+    res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+    res.header("Access-Control-Allow-Private-Network", "true");
+    next();
+  });
+
   app.use(
     cors({
       origin: true,
@@ -44,7 +57,6 @@ export function createApp() {
     }),
   );
 
-  // allow chrome-extension + gmail preflight
   app.options("*", (req, res) => {
     res.header("Access-Control-Allow-Origin", req.headers.origin || "*");
     res.header("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
@@ -53,7 +65,6 @@ export function createApp() {
     res.sendStatus(200);
   });
 
-  app.use(express.json({ limit: "1mb" }));
   app.use(rateLimitMiddleware);
 
   app.get("/health", (req, res) => {
