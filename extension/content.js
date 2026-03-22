@@ -1,6 +1,6 @@
 console.log("AI EXTENSION TEST");
 
-const API_BASE_URL = "http://localhost:4000/api/reply";
+const API_BASE_URL = "https://generate-email-ie0i.onrender.com/api/reply";
 const COMPOSE_DIALOG_SELECTOR = 'div[role="dialog"]';
 const TOOLBAR_SELECTOR = 'div[role="toolbar"]';
 const editorSelectors = [
